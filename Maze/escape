@@ -1,0 +1,353 @@
+#Libraries
+import pygame
+from pygame import*
+pygame.display.set_icon(pygame.image.load("HeadBendy.png"))
+#Music
+mixer.init()
+mixer.music.load("07.-Drawn-To-Darkness.ogg")
+mixer.music.play()
+
+#Variable
+lives = 3
+w = 1525
+h = 775
+
+
+#Display
+window = display.set_mode((w, h)) 
+display.set_caption("I̴̧̯̖̥̟̪̳̫̪͉̻̤̞̻͒͆̅͗̔̋̈́͝͝n̶̥͍͐̈́̄̀͆̑́̇̊́͐̓̈́͘k̷̨̜̬̫̙͍̮̫̲̔͂͂̀͗́͂̐̆̚ͅͅ ̴̜̬͇̯̝̈́͊͆̾͛̉̀͐̆͑̊͜͝͠M̸̨̪̻̗̫̔͆̆͛͌͊̔̀̃̌̔͘͘͠ą̸̙̥̫̙͇̥̞̹̣̪̩̓̀̓̀̏̃͊͐̊̚̕͠ͅz̶̨̧̞̪̻̪̬̥͎̱̱͚͉̙̀ḛ̴̡̧̛̬̻͈́̄͗̍͐̕") 
+background = transform.scale(image.load("floor.jpg"), (1525, 775)) 
+
+#Classes
+class Player(sprite.Sprite): 
+    def __init__ (self, player_image, player_x, player_y, player_speed): 
+        super().__init__() 
+        self.image = transform.scale(image.load(player_image), (85,150)) 
+        self.speed = player_speed 
+        self.rect = self.image.get_rect() 
+        self.rect.x = player_x 
+        self.rect.y = player_y 
+    def reset(self): 
+        window.blit(self.image, (self.rect.x, self.rect.y)) 
+     
+class Enemy(Player): 
+    direction = "right" 
+    def update(self): 
+        if self.rect.x <= 100:
+            self.direction = "right"
+        if self.rect.x >= 630: 
+            self.direction = "left" 
+        if self.direction == "left": 
+            self.rect.x -= self.speed 
+        if self.direction == "right": 
+            self.rect.x += self.speed 
+class Skarb(Player): 
+    direction = "right" 
+    def update(self): 
+        if self.rect.x <= 100: 
+            self.direction = "right"
+        if self.rect.x >= 600: 
+            self.direction = "left" 
+        if self.direction == "left": 
+            self.rect.x -= self.speed 
+        if self.direction == "right": 
+            self.rect.x += self.speed 
+class Bendy(Player): 
+    direction2 = "down" 
+    def update(self): 
+        if self.rect.y <= -150: 
+            self.direction2 = "down" 
+        if self.rect.y >= 775: 
+            self.direction2 = "up" 
+        if self.direction2 == "up": 
+            self.rect.y -= self.speed 
+        if self.direction2 == "down": 
+            self.rect.y += self.speed 
+class Hero(Player): 
+    def update(self): 
+        keys = key.get_pressed() 
+        if keys[K_UP] or keys[K_w] and self.rect.y >= 0: 
+            self.rect.y -= self.speed 
+        if keys[K_DOWN] or keys[K_s] and self.rect.y <= 775: 
+            self.rect.y += self.speed 
+        if keys[K_LEFT] or keys[K_a] and self.rect.x >= 0: 
+            self.rect.x -= self.speed 
+        if keys[K_RIGHT] or keys[K_d] and self.rect.x <= 1500: 
+            self.rect.x += self.speed 
+class DeathScreen(sprite.Sprite):
+    def __init__ (self, ds_image, ds_x, ds_y): 
+        super().__init__() 
+        self.image = transform.scale(image.load(ds_image), (1525, 775)) 
+        self.rect = self.image.get_rect() 
+        self.rect.x = ds_x 
+        self.rect.y = ds_y
+    def dsreset(self): 
+        window.blit(self.image, (self.rect.x, self.rect.y)) 
+
+class Live(sprite.Sprite):
+    def __init__ (self, ds_image, ds_x, ds_y): 
+        super().__init__() 
+        self.image = transform.scale(image.load(ds_image), (50, 50)) 
+        self.rect = self.image.get_rect() 
+        self.rect.x = ds_x 
+        self.rect.y = ds_y
+    def lreset(self): 
+        window.blit(self.image, (self.rect.x, self.rect.y)) 
+        
+class Wall(sprite.Sprite): 
+    def __init__(self, width, height, color, wall_x, wall_y): 
+        super().__init__() 
+        self.color = color 
+        self.width = width 
+        self.height = height 
+        self.image = Surface((self.width, self.height)) 
+        self.image.fill((color)) 
+        self.rect = self.image.get_rect() 
+        self.rect.x = wall_x 
+        self.rect.y = wall_y 
+    def draw_wall(self): 
+        window.blit(self.image, (self.rect.x, self.rect.y)) 
+
+#Walls
+w1 = Wall(400, 20, (0, 0, 0), 0, 160)
+w2 = Wall(200, 20, (0, 0, 0), 560, 160)
+w3 = Wall(20, 400, (0, 0, 0), 760, 0)
+w4 = Wall(20, 400, (0, 0, 0), 760, 570)
+w5 = Wall(200, 20, (0, 0, 0), 560, 380)
+w6 = Wall(20, 200, (238, 189, 77), 560, 180)
+w7 = Wall(20, 200, (0, 0, 0), 560, 380)
+w8 = Wall(200, 20, (0, 0, 0), 360, 560)
+w9 = Wall(200, 20, (0, 0, 0), 0, 560)
+w10 = Wall(20, 700, (0, 0, 0), 920, 300)
+w11 = Wall(20, 100, (0, 0, 0), 920, 0)
+plank = Wall(20, 400, (146, 63, 1), 200, 170)
+w12 = Wall(160, 20, (238, 189, 77), 200, 570)
+w13 = Wall(400, 20, (0, 0, 0), 920, 300)
+w14 = Wall(20, 160, (0, 0, 0), 1080, 160)
+w15 = Wall(20, 130, (0, 0, 0), 1240, 0)
+w16 = Wall(210, 20, (238, 189, 77), 1320, 310)
+w17 = Wall(500, 20, (0, 0, 0), 1080, 490)
+w18 = Wall(20, 300, (238, 189, 77), 1080, 490)
+
+#Characters
+hero = Hero("Henry.png", 0, 400, 5) 
+
+enemy = Enemy("Searcher.png", 630, 0, 3)
+enemyr = transform.scale(image.load("Left Searcher.png"), (85, 150))
+enemyl = transform.scale(image.load("Searcher.png"), (85, 150))
+
+enemy2 = Enemy("Sammy Searcher.png", 170, 600, 3) 
+enemy2r = transform.scale(image.load("Left Sammy Searcher.png"), (85, 150))
+enemy2l = transform.scale(image.load("Sammy Searcher.png"), (85, 150))
+tool1 = Skarb("Wrench.png", 0, 0, 0)
+tool2 = Skarb("Gear box.png", 620, 200, 0)
+tool3 = Skarb("Soup.png", 0, 625, 0)
+tool4 = Skarb("Axe.png", 0, 200, 0)
+tool5 = Skarb("Lever.png", 1425, 0, 0)
+tool6 = Skarb("Key.png", 800, 0, 0)
+exit = Skarb("Door.png", 1425, 625, 0)
+boss = Bendy("Ink Demon.png", 800, 0, 6)
+
+#Deathscreen and else
+ds1 = DeathScreen("Ink Portal.jpg", 0, 0)
+ds2 = DeathScreen("Wallpaper.jpg",0,0)
+winscreen = DeathScreen("End.png", 0, 0)
+#Lives
+live1 = Live("Dark Heart.png", 0, 0)
+live2 = Live("Dark Heart.png", 50, 0)
+live3 = Live("Dark Heart.png", 100, 0)
+live4 = Live("Dark Heart.png", 0, 0)
+
+
+#Text
+font.init()
+font1 = font.SysFont("Roman", 200)
+win = font1.render("YOU ESCAPED", True, (0, 140, 0))
+lose = font1.render("YOU DIED", True, (140, 0, 0))
+font2 = font.Font(None, 100)
+death2 = font2.render("Killed by The Ink Demon", True, (130, 100, 0))
+death1 = font2.render("Killed by The Searcher", True, (130, 100, 0))
+esc = font2.render("For now...", True, (140,0,0))
+
+
+#Sounds
+kick = mixer.Sound("Damage.ogg")
+voiceline1 = mixer.Sound("Dark-pudles.ogg")
+voiceline2 = mixer.Sound("I-am-the-Ink-Demon.ogg")
+pickup = mixer.Sound("Wrench Sound.ogg")
+soup = mixer.Sound("Soup.ogg")
+wood = mixer.Sound("Wood.ogg")
+winsound = mixer.Sound("1-Dawn-of-the-Doors.ogg")
+#Game cycle and Death
+game = True 
+finish = False 
+clock = time.Clock() 
+FPS = 45
+while game: 
+    for e in event.get(): 
+        if e.type == pygame.QUIT: 
+            game = False 
+    if finish != True: 
+        window.blit(background,(0,0))
+        if enemy.rect.x <= 100:
+            enemy.image = enemyr
+        if enemy.rect.x >= 630:
+            enemy.image = enemyl
+        if enemy2.rect.x <= 100:
+            enemy2.image = enemy2l
+        if enemy2.rect.x >= 630:
+            enemy2.image = enemy2r
+            
+        w1.draw_wall()
+        w2.draw_wall()
+        w3.draw_wall()
+        w4.draw_wall()
+        w5.draw_wall()
+        w6.draw_wall()
+        w7.draw_wall()
+        w8.draw_wall()
+        w9.draw_wall()
+        w10.draw_wall()
+        w11.draw_wall()
+        plank.draw_wall()
+        w12.draw_wall()
+        w13.draw_wall()
+        w14.draw_wall()
+        w15.draw_wall()
+        w16.draw_wall()
+        w17.draw_wall()
+        w18.draw_wall()
+
+        hero.update()
+        hero.reset() 
+
+        enemy.update()
+        enemy2.update()
+        enemy2.reset()
+        enemy.reset()
+
+        tool1.update() 
+        tool1.reset()
+        tool2.update()
+        tool2.reset()
+        tool3.update()
+        tool3.reset()
+        tool4.update()
+        tool4.reset()
+        tool5.update()
+        tool5.reset()
+        tool6.update()
+        tool6.reset()
+
+        live2.update()
+        live3.update()
+        live1.update()
+        live4.update()
+        live1.lreset()
+        live2.lreset()
+        live3.lreset()
+        live4.lreset()
+
+
+        exit.update()
+        exit.reset()
+
+        boss.update()
+        boss.reset()
+           
+        if lives == 3:
+            live1.rect.x = 0
+            live2.rect.x = 50
+            live3.rect.x = 100
+            live4.rect.x = 0
+        if lives == 4:
+            live1.rect.x = 0
+            live2.rect.x = 50
+            live3.rect.x = 100
+            live4.rect.x = 150    
+        if lives == 2:
+            live3.rect.x = 0
+            live1.rect.x = 0
+            live2.rect.x = 50
+            live4.rect.x = 0
+        if lives == 1:
+            live1.rect.x = 0
+            live2.rect.x = 0
+            live3.rect.x = 0
+            live4.rect.x = 0    
+
+        if sprite.collide_rect(hero, enemy) or sprite.collide_rect(hero, enemy2):
+            kick.play()
+            lives -=1
+            hero.rect.x = 100 
+            hero.rect.y = 400
+            if lives == 0:
+                ds1.update()
+                ds1.dsreset()
+                mixer.music.stop()
+                voiceline1.play()
+
+                finish = True
+                window.blit(death1, (390, 425))
+                window.blit(lose, (300, 225))
+        if sprite.collide_rect(hero, boss):
+            mixer.music.stop()
+            voiceline2.play()
+            finish = True
+            ds2.update()
+            ds2.dsreset()
+            window.blit(death2, (390, 425))
+            window.blit(lose, (300, 225))
+
+        if sprite.collide_rect(hero, tool1):
+            tool1 = Skarb("Wrench.png", -200, -200, 0)
+            w6 = Wall(200, 20, (0, 0, 0), 560, 380)
+            pickup.play()
+
+        if sprite.collide_rect(hero, tool4):
+            tool4 = Skarb("Axe.png", -200, -200, 0)
+            plank = Wall(200, 20, (0, 0, 0), 560, 380)
+            wood.play()
+
+        if sprite.collide_rect(hero, tool2):
+            w12 = Wall(200, 20, (0, 0, 0), 560, 380)
+            tool2 = Skarb("Gear Box.png", -200, -200, 0)
+            pickup.play()
+
+        if sprite.collide_rect(hero, tool3):
+            lives = lives + 1
+            tool3 = Skarb("Soup.png", -200, -200, 0)
+            soup.play()
+        if sprite.collide_rect(hero, tool5):
+            tool5 = Skarb("Lever.png", -200, -200, 0)
+            pickup.play()
+            w16 = Wall(200, 20, (0, 0, 0), 560, 380)
+        if sprite.collide_rect(hero, tool6):
+            tool6 = Skarb("Key.png", -200, -200, 0)
+            w18 = Wall(200, 20, (0, 0, 0), 560, 380)
+            pickup.play()
+        if sprite.collide_rect(hero, exit):
+            mixer.music.stop()
+            winsound.play()
+            finish = True
+            winscreen.update()
+            winscreen.dsreset()
+            window.blit(win, (150, 225))
+            window.blit(esc, (625, 425))
+
+
+        #while sprite.collide_rect(hero, enemy) and lives <= 0:
+        #if sprite.collide_rect(hero, skarb):
+            #window.blit(win, (175, 225))
+            #finish = True
+        if hero.rect.x >= 1523 or hero.rect.y >= 773:
+            hero.rect.x = 100 
+            hero.rect.y = 400
+
+        if sprite.collide_rect(hero, w1) or sprite.collide_rect(hero, w2) or sprite.collide_rect(hero, w3) or sprite.collide_rect(hero, w4) or sprite.collide_rect(hero, w5) or sprite.collide_rect(hero, w6) or sprite.collide_rect(hero, w7) or sprite.collide_rect(hero, w8) or sprite.collide_rect(hero, w9) or sprite.collide_rect(hero, w10) or sprite.collide_rect(hero, w11) or sprite.collide_rect(hero, plank) or sprite.collide_rect(hero, w12) or sprite.collide_rect(hero, w13) or sprite.collide_rect(hero, w14) or sprite.collide_rect(hero, w15) or sprite.collide_rect(hero, w16) or sprite.collide_rect(hero, w17) or sprite.collide_rect(hero, w18): 
+            hero.rect.x = 100 
+            hero.rect.y = 400
+
+        
+    pygame.display.update() 
+    clock.tick(FPS)
